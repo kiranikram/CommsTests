@@ -94,8 +94,7 @@ class SeasonForecast:
         ag_1_msg = self.agents[0].get_rand_comms()
         ag_2_msg = self.agents[1].get_rand_comms()
 
-        
-
+    
         #how is the comms bit appended to locat agent obs ?! 
 
 
