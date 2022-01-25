@@ -7,6 +7,54 @@ import torch.nn as nn
 from torch.distributions.categorical import Categorical
 from torch.optim import Adam
 
+v_obs_space = spaces.Discrete(8)
+
+v_act_space = spaces.Discrete(4)
+
+obs_dim = v_obs_space.n
+n_acts = v_act_space.n
+hidden_sizes = [32]
+
+def mlp(sizes, activation=nn.Tanh, output_activation=nn.Identity):
+    # Build a feedforward neural network.
+    layers = []
+    for j in range(len(sizes)-1):
+        act = activation if j < len(sizes)-2 else output_activation
+        layers += [nn.Linear(sizes[j], sizes[j+1]), act()]
+    return nn.Sequential(*layers)
+
+# make core of policy network
+logits_net = mlp(sizes=[obs_dim]+hidden_sizes+[n_acts])
+
+y = [obs_dim]+hidden_sizes+[n_acts]
+
+# make function to compute action distribution
+def get_policy(obs):
+    logits = logits_net(obs)
+    return Categorical(logits=logits)
+
+    # make action selection function (outputs int actions, sampled from policy)
+def get_action(obs):
+    return get_policy(obs).sample().item()
+
+env = gym.make('CartPole-v0')
+
+obs = env.reset()
+
+test_obs = [1.0,2.0,1.0,2.0,1.0,1.0,1.0,1.0]
+test_obs = np.array(test_obs)
+
+x = get_action((torch.as_tensor(test_obs, dtype=torch.float32)))
+
+
+
+############
+
+env = gym.make('CartPole-v0')
+
+obs = env.reset()
+
+print(env.observation_space.shape[0])
 
 def pi_net (obs_dim, hidden_size, act_dim):
     mlp = nn.Sequential(
@@ -26,8 +74,11 @@ def get_policy(obs):
 def get_action(obs):
     return get_policy(obs).sample().item()
 
-obs = [1.0,2.0,1.0]
-obs = np.array(obs)
+test_obs = [1.0,2.0,1.0,2.0]
+test_obs = np.array(test_obs)
+
+print(type(obs))
+print(type(test_obs))
 
 obs_dim = obs.shape[0]
 

@@ -2,6 +2,8 @@ import random
 import scipy.stats as stats
 import numpy as np
 import sys
+import gym
+from gym import spaces 
 sys.path.insert(0, "/Users/kiran_ikram/Documents/GitHub/CommsTests")
 
 
@@ -27,6 +29,8 @@ class SeasonForecast:
         self.nn_step = 0
         self.n_steps = n_steps
         self.occlusions_pct = occlusion_pct
+        self.observation_space = spaces.Discrete(8)
+        self.action_space = spaces.Discrete(4)
         
     def get_season(self):
         self.the_season =  stats.mode(self.forecast)[0][0]
