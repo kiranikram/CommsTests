@@ -10,7 +10,7 @@ class Agent:
 
 
     #@staticmethod
-    def gen_random_actions(self):
+    def get_random_actions(self):
         
         actions = [0,1,2,3]
         action = random.sample(actions,1)
@@ -41,3 +41,7 @@ class Agent:
 
     def reset(self):
         self.done = False
+
+
+an_agent = Agent()
+an_agent.get_random_actions()

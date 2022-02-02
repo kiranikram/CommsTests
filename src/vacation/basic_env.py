@@ -7,7 +7,7 @@ from gym import spaces
 sys.path.insert(0, "/Users/kiran_ikram/Documents/GitHub/CommsTests")
 
 
-from utils import Actions, Seasons
+from src.vacation.utils import Actions, Seasons
 
 
 
@@ -62,7 +62,7 @@ class SeasonForecast:
 
         return obs
 
-    def step(self):
+    def step(self,actions):
         #self.step += 1
 
         #communicate 
@@ -82,8 +82,8 @@ class SeasonForecast:
         else:
             obs[self.agents[1]] = None
 
-        rewards[self.agents[0]] = self.get_agent_rew(self.agents[0])
-        rewards[self.agents[1]] = self.get_agent_rew(self.agents[1])
+        rewards[self.agents[0]] = self.get_agent_rew(actions[self.agents[0]])
+        rewards[self.agents[1]] = self.get_agent_rew(actions[self.agents[1]])
 
         if self.step == self.n_steps:
             dones[self.agents[0]] = True
@@ -110,22 +110,24 @@ class SeasonForecast:
 
         agent_action = Actions[action]
         current_season = Seasons[self.the_season]
+        print('in rew current season is ',current_season)
         
+        rew = 0
         if current_season == 'rainy':
             if agent_action == 'umbrella':
-                rew = 5
+                rew += 5
             elif agent_action == 'beach_ball' or agent_action == 'skis':
                 rew = -5
 
         elif current_season == 'snow':
             if agent_action == 'skis':
-                rew = 5
+                rew += 5
             elif agent_action == 'beach_ball' or agent_action == 'umbrella': 
                 rew = -5
 
         elif current_season == 'sunny':
             if agent_action == 'beach_ball':
-                rew = 5
+                rew += 5
             elif agent_action == 'umbrella' or agent_action == 'skis':
                 rew = -5 
  
